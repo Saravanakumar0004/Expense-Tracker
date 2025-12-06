@@ -1,33 +1,19 @@
 const express = require("express");
-const usersController = require("../controllers/usersCtrl");
 const isAuthenticated = require("../middlewares/isAuth");
-const categoryController = require("../controllers/categoryCtrl");
 const transactionController = require("../controllers/transactionCtrl");
+
 const transactionRouter = express.Router();
 
-//!add
-transactionRouter.post(
-  "/api/v1/transactions/create",
-  isAuthenticated,
-  transactionController.create
-);
-//! lists
-transactionRouter.get(
-  "/api/v1/transactions/lists",
-  isAuthenticated,
-  transactionController.getFilteredTransactions
-);
-//! update
-transactionRouter.put(
-  "/api/v1/transactions/update/:id",
-  isAuthenticated,
-  transactionController.update
-);
-//! delete
-transactionRouter.delete(
-  "/api/v1/transactions/delete/:id",
-  isAuthenticated,
-  transactionController.delete
-);
+// ✅ Create
+transactionRouter.post("/create", isAuthenticated, transactionController.create);
+
+// ✅ Lists
+transactionRouter.get("/lists", isAuthenticated, transactionController.getFilteredTransactions);
+
+// ✅ Update
+transactionRouter.put("/update/:id", isAuthenticated, transactionController.update);
+
+// ✅ Delete
+transactionRouter.delete("/delete/:id", isAuthenticated, transactionController.delete);
 
 module.exports = transactionRouter;
