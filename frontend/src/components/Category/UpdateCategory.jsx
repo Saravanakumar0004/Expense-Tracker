@@ -11,6 +11,7 @@ import { SiDatabricks } from "react-icons/si";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateCategoryAPI } from "../../services/category/categoryService";
 import AlertMessage from "../Alert/AlertMessage";
+import Footer from "../Users/Footer";
 
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -65,16 +66,18 @@ const UpdateCategory = () => {
   });
 
   return (
+    <>
     <form
       onSubmit={formik.handleSubmit}
-      className="max-w-lg mx-auto my-10 bg-white p-6 rounded-lg shadow-lg space-y-6"
+      className="max-w-lg mx-auto my-10 bg-gradient-to-br from-gray-900 to-black p-8 rounded-2xl shadow-2xl space-y-6 border border-yellow-600/30 backdrop-blur-sm animate-fadeIn hover:shadow-yellow-500/20 transition-all duration-500"
     >
       <div className="text-center">
-        <h2 className="text-2xl font-semibold text-gray-800">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent mb-2">
           Update Category
         </h2>
-        <p className="text-gray-600">Fill in the details below.</p>
+        <p className="text-gray-400">Fill in the details below.</p>
       </div>
+      
       {/* Display alert message */}
       {isError && (
         <AlertMessage
@@ -91,55 +94,61 @@ const UpdateCategory = () => {
           message="Category updated successfully, redirecting..."
         />
       )}
+      
       {/* Category Type */}
-      <div className="space-y-2">
+      <div className="space-y-2 transform transition-all duration-300 hover:scale-102">
         <label
           htmlFor="type"
-          className="flex gap-2 items-center text-gray-700 font-medium"
+          className="flex gap-2 items-center text-gray-300 font-medium"
         >
-          <FaWallet className="text-blue-500" />
+          <FaWallet className="text-yellow-500 animate-pulse" />
           <span>Type</span>
         </label>
         <select
           {...formik.getFieldProps("type")}
           id="type"
-          className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+          className="w-full p-3 bg-black/50 border border-gray-700 rounded-lg text-white shadow-sm focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 transition-all duration-300 hover:border-yellow-600"
         >
-          <option value="">Select transaction type</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
+          <option value="" className="bg-gray-900">Select transaction type</option>
+          <option value="income" className="bg-gray-900">Income</option>
+          <option value="expense" className="bg-gray-900">Expense</option>
         </select>
         {formik.touched.type && formik.errors.type && (
-          <p className="text-red-500 text-xs">{formik.errors.type}</p>
+          <p className="text-red-400 text-xs animate-shake">{formik.errors.type}</p>
         )}
       </div>
 
       {/* Category Name */}
-      <div className="flex flex-col">
-        <label htmlFor="name" className="text-gray-700 font-medium">
-          <SiDatabricks className="inline mr-2 text-blue-500" />
+      <div className="flex flex-col transform transition-all duration-300 hover:scale-102">
+        <label htmlFor="name" className="text-gray-300 font-medium mb-2">
+          <SiDatabricks className="inline mr-2 text-yellow-500 animate-pulse" />
           Name
         </label>
         <input
           type="text"
           {...formik.getFieldProps("name")}
-          placeholder="Name"
+          placeholder="Enter category name"
           id="name"
-          className="w-full mt-1 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 py-2 px-3"
+          className="w-full p-3 bg-black/50 border border-gray-700 rounded-lg text-white shadow-sm focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 transition-all duration-300 hover:border-yellow-600 placeholder-gray-500"
         />
         {formik.touched.name && formik.errors.name && (
-          <p className="text-red-500 text-xs italic">{formik.errors.name}</p>
+          <p className="text-red-400 text-xs italic mt-1 animate-shake">{formik.errors.name}</p>
         )}
       </div>
 
       {/* Submit Button */}
       <button
         type="submit"
-        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-200 transform"
+        disabled={isPending}
+        className="w-full mt-6 bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 hover:from-yellow-600 hover:via-yellow-700 hover:to-yellow-800 text-black font-bold py-3 px-6 rounded-lg focus:outline-none focus:ring-4 focus:ring-yellow-500/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Update Category
+        {isPending ? "Updating..." : "Update Category"}
       </button>
     </form>
+    <footer>
+      <Footer/>
+    </footer>
+    </>
   );
 };
 
