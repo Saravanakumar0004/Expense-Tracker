@@ -1,0 +1,68 @@
+:root {
+  --ink-900: #142420;
+  --ink-800: #1c332d;
+  --paper: #f6f1e4;
+  --paper-line: #ddd4bd;
+  --brass: #a9821f;
+  --brass-soft: #e4d9b6;
+  --rust: #a2503f;
+  --rust-soft: #f0ddd6;
+  --text-ink: #241f16;
+  --text-muted: #6b6555;
+  --radius: 3px;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink-900);
+  color: var(--text-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--brass-soft);
+}
+
+a {
+  color: inherit;
+}
+
+/* visible keyboard focus, kept consistent across interactive elements */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
