@@ -10,19 +10,35 @@ app.use(cors());
 app.use(express.json());
 
 // --- MongoDB connection (cached across serverless invocations) ---
-let isConnected = false;
+// Don't trust a boolean flag across warm lambda invocations — the underlying
+// socket can silently die (Atlas idle timeout, freeze/thaw) while the flag
+// still says "connected". Check mongoose's actual readyState instead, and
+// cache the in-flight connect() promise so concurrent requests on a cold
+// start don't race to open multiple connections.
+let connectPromise = null;
 
 async function connectDB() {
-  if (isConnected) return;
+  if (mongoose.connection.readyState === 1) return; // already connected
 
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    throw new Error('MONGODB_URI environment variable is not set');
+  if (!connectPromise) {
+    const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      throw new Error('MONGODB_URI environment variable is not set');
+    }
+
+    connectPromise = mongoose
+      .connect(uri, {
+        bufferCommands: false, // fail fast instead of queueing for 10s
+        serverSelectionTimeoutMS: 5000,
+      })
+      .then(() => console.log('MongoDB connected'))
+      .catch((err) => {
+        connectPromise = null; // allow retry on next request
+        throw err;
+      });
   }
 
-  await mongoose.connect(uri);
-  isConnected = true;
-  console.log('MongoDB connected');
+  await connectPromise;
 }
 
 // Ensure DB is connected before handling any request
