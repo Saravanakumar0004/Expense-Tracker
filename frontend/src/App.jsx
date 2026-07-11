@@ -5,6 +5,7 @@ import SummaryStrip from './components/SummaryStrip';
 import AddEntryForm from './components/AddEntryForm';
 import CategoryChart from './components/CategoryChart';
 import TransactionList from './components/TransactionList';
+import MonthComparisonChart from './components/MonthComparisonChart';
 
 function currentMonth() {
   return new Date().toISOString().slice(0, 7); // YYYY-MM
@@ -14,6 +15,7 @@ export default function App() {
   const [month, setMonth] = useState(currentMonth());
   const [transactions, setTransactions] = useState([]);
   const [summary, setSummary] = useState(null);
+  const [monthly, setMonthly] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -21,12 +23,14 @@ export default function App() {
     setLoading(true);
     setError('');
     try {
-      const [txns, summ] = await Promise.all([
+      const [txns, summ, monthlySumm] = await Promise.all([
         api.getTransactions(month),
         api.getSummary(month),
+        api.getMonthlySummary(),
       ]);
       setTransactions(txns);
       setSummary(summ);
+      setMonthly(monthlySumm);
     } catch (err) {
       setError(err.message || 'Could not reach the server.');
     } finally {
@@ -49,40 +53,14 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', padding: '2.5rem 1.5rem' }}>
-      <div style={{ maxWidth: 880, margin: '0 auto' }}>
-        <header
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            marginBottom: '1.75rem',
-            flexWrap: 'wrap',
-            gap: '1rem',
-          }}
-        >
+    <div className="min-h-screen bg-ink900 px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-[880px]">
+        <header className="mb-7 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <div
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.7rem',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'var(--brass-soft)',
-                marginBottom: '0.3rem',
-              }}
-            >
+            <div className="mb-1 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-brassSoft">
               Personal Ledger
             </div>
-            <h1
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '2.1rem',
-                fontWeight: 600,
-                color: 'var(--paper)',
-                margin: 0,
-              }}
-            >
+            <h1 className="m-0 font-display text-[1.6rem] font-semibold text-paper sm:text-[2.1rem]">
               Where your money went
             </h1>
           </div>
@@ -90,56 +68,39 @@ export default function App() {
         </header>
 
         {error && (
-          <div
-            style={{
-              background: 'var(--rust-soft)',
-              color: 'var(--rust)',
-              padding: '0.9rem 1.1rem',
-              borderRadius: 'var(--radius)',
-              marginBottom: '1.25rem',
-              fontSize: '0.9rem',
-            }}
-          >
+          <div className="mb-5 rounded-sm bg-rustSoft px-4 py-3 text-sm text-rust">
             {error} — check that <code>VITE_API_URL</code> points to your running backend.
           </div>
         )}
 
-        <div style={{ marginBottom: '1.5rem' }}>
+        <div className="mb-6">
           <SummaryStrip summary={summary} loading={loading} />
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 1fr)',
-            gap: '1.5rem',
-            marginBottom: '1.5rem',
-          }}
-        >
+        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <SectionLabel>Add entry</SectionLabel>
             <AddEntryForm onAdd={handleAdd} />
           </div>
           <div>
             <SectionLabel>Spending by category</SectionLabel>
-            <div style={{ background: 'var(--paper)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', padding: '1rem' }}>
+            <div className="rounded-sm border border-paperLine bg-paper p-4">
               <CategoryChart byCategory={summary?.byCategory} />
             </div>
           </div>
         </div>
 
-        <div>
+        <div className="mb-6">
           <SectionLabel>Transactions this month</SectionLabel>
           <TransactionList transactions={transactions} onDelete={handleDelete} />
         </div>
 
-        <style>{`
-          @media (max-width: 720px) {
-            div[style*="grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr)"] {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}</style>
+        <div>
+          <SectionLabel>Compare months</SectionLabel>
+          <div className="rounded-sm border border-paperLine bg-paper p-4">
+            <MonthComparisonChart monthly={monthly} />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -147,16 +108,7 @@ export default function App() {
 
 function SectionLabel({ children }) {
   return (
-    <div
-      style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.7rem',
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase',
-        color: 'var(--brass-soft)',
-        marginBottom: '0.6rem',
-      }}
-    >
+    <div className="mb-2 font-mono text-[0.7rem] uppercase tracking-[0.1em] text-brassSoft">
       {children}
     </div>
   );

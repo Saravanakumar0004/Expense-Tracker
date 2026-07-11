@@ -3,24 +3,10 @@ import { useState } from 'react';
 const EXPENSE_CATEGORIES = ['Food', 'Petrol', 'Recharge', 'Trip', 'Dress', 'Rent', 'Other'];
 const INCOME_CATEGORIES = ['Salary', 'Bonus', 'Other'];
 
-const inputStyle = {
-  width: '100%',
-  padding: '0.6rem 0.7rem',
-  border: '1px solid var(--paper-line)',
-  borderRadius: 'var(--radius)',
-  background: '#fff',
-  fontSize: '0.9rem',
-  color: 'var(--text-ink)',
-};
-
-const labelStyle = {
-  display: 'block',
-  fontSize: '0.7rem',
-  letterSpacing: '0.06em',
-  textTransform: 'uppercase',
-  color: 'var(--text-muted)',
-  marginBottom: '0.35rem',
-};
+const inputClass =
+  'w-full rounded-sm border border-paperLine bg-white px-3 py-2.5 text-sm text-textInk';
+const labelClass =
+  'mb-1.5 block text-[0.7rem] uppercase tracking-wider text-textMuted';
 
 export default function AddEntryForm({ onAdd }) {
   const todayStr = new Date().toISOString().slice(0, 10);
@@ -63,45 +49,47 @@ export default function AddEntryForm({ onAdd }) {
   return (
     <form
       onSubmit={handleSubmit}
-      style={{
-        background: 'var(--paper)',
-        border: '1px solid var(--paper-line)',
-        borderRadius: 'var(--radius)',
-        padding: '1.5rem',
-      }}
+      className="rounded-sm border border-paperLine bg-paper p-5 sm:p-6"
     >
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
+      <div className="mb-5 flex gap-2">
         {['expense', 'income'].map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => handleTypeChange(t)}
-            style={{
-              flex: 1,
-              padding: '0.55rem',
-              borderRadius: 'var(--radius)',
-              border: `1px solid ${type === t ? 'transparent' : 'var(--paper-line)'}`,
-              background: type === t ? (t === 'expense' ? 'var(--rust)' : 'var(--brass)') : 'transparent',
-              color: type === t ? '#fff' : 'var(--text-ink)',
-              fontWeight: 600,
-              fontSize: '0.85rem',
-              textTransform: 'capitalize',
-              transition: 'background 0.15s ease',
-            }}
+            className={`flex-1 rounded-sm border py-2.5 text-sm font-semibold capitalize transition-colors ${
+              type === t
+                ? t === 'expense'
+                  ? 'border-transparent bg-rust text-white'
+                  : 'border-transparent bg-brass text-white'
+                : 'border-paperLine bg-transparent text-textInk'
+            }`}
           >
             {t}
           </button>
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.9rem', marginBottom: '0.9rem' }}>
+      <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label style={labelStyle} htmlFor="date">Date</label>
-          <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} style={inputStyle} required />
+          <label className={labelClass} htmlFor="date">Date</label>
+          <input
+            id="date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className={inputClass}
+            required
+          />
         </div>
         <div>
-          <label style={labelStyle} htmlFor="category">Category</label>
-          <select id="category" value={category} onChange={(e) => setCategory(e.target.value)} style={inputStyle}>
+          <label className={labelClass} htmlFor="category">Category</label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className={inputClass}
+          >
             {categories.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
@@ -109,8 +97,8 @@ export default function AddEntryForm({ onAdd }) {
         </div>
       </div>
 
-      <div style={{ marginBottom: '0.9rem' }}>
-        <label style={labelStyle} htmlFor="amount">Amount (₹)</label>
+      <div className="mb-4">
+        <label className={labelClass} htmlFor="amount">Amount (₹)</label>
         <input
           id="amount"
           type="number"
@@ -119,41 +107,29 @@ export default function AddEntryForm({ onAdd }) {
           placeholder="0"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          style={{ ...inputStyle, fontFamily: 'var(--font-mono)' }}
+          className={`${inputClass} font-mono`}
           required
         />
       </div>
 
-      <div style={{ marginBottom: '1.1rem' }}>
-        <label style={labelStyle} htmlFor="note">Note (optional)</label>
+      <div className="mb-5">
+        <label className={labelClass} htmlFor="note">Note (optional)</label>
         <input
           id="note"
           type="text"
           placeholder="e.g. July petrol top-up"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          style={inputStyle}
+          className={inputClass}
         />
       </div>
 
-      {error && (
-        <div style={{ color: 'var(--rust)', fontSize: '0.85rem', marginBottom: '0.9rem' }}>{error}</div>
-      )}
+      {error && <div className="mb-4 text-sm text-rust">{error}</div>}
 
       <button
         type="submit"
         disabled={submitting}
-        style={{
-          width: '100%',
-          padding: '0.7rem',
-          background: 'var(--ink-900)',
-          color: 'var(--paper)',
-          border: 'none',
-          borderRadius: 'var(--radius)',
-          fontWeight: 600,
-          fontSize: '0.9rem',
-          opacity: submitting ? 0.6 : 1,
-        }}
+        className="w-full rounded-sm bg-ink900 py-3 text-sm font-semibold text-paper disabled:opacity-60"
       >
         {submitting ? 'Saving…' : 'Add entry'}
       </button>

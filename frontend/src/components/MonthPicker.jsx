@@ -4,16 +4,8 @@ export default function MonthPicker({ month, onChange }) {
       type="month"
       value={month}
       onChange={(e) => onChange(e.target.value)}
-      style={{
-        background: 'transparent',
-        border: `1px solid var(--paper-line)`,
-        borderRadius: 'var(--radius)',
-        padding: '0.5rem 0.75rem',
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.9rem',
-        color: 'var(--text-ink)',
-      }}
       aria-label="Select month"
+      className="min-w-[160px] w-auto rounded-sm border border-paperLine bg-white px-3 py-2 font-mono text-sm text-textInk"
     />
   );
 }

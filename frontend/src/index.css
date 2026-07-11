@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply bg-ink900 text-textInk font-body antialiased m-0 p-0;
+  }
+
+  ::selection {
+    @apply bg-brassSoft;
+  }
+
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible {
+    @apply outline outline-2 outline-brass outline-offset-2;
+  }
+
+  /* Force legible native form controls even when the OS/browser applies
+     forced dark mode to form fields (common on Android Chrome) */
+  input[type='month'],
+  input[type='date'] {
+    color-scheme: light;
+    color: theme('colors.textInk') !important;
+    background-color: #fff !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

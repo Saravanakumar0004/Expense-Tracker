@@ -9,7 +9,7 @@ export default function CategoryChart({ byCategory }) {
 
   if (data.length === 0) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+      <div className="p-8 text-center text-sm text-textMuted">
         No expenses logged for this month yet.
       </div>
     );
@@ -23,17 +23,17 @@ export default function CategoryChart({ byCategory }) {
           type="category"
           dataKey="category"
           width={90}
-          tick={{ fontFamily: 'var(--font-body)', fontSize: 12, fill: 'var(--text-ink)' }}
+          tick={{ fontFamily: 'Inter, system-ui, sans-serif', fontSize: 12, fill: '#241f16' }}
           axisLine={false}
           tickLine={false}
         />
         <Tooltip
           formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, 'Spent']}
           contentStyle={{
-            background: 'var(--paper)',
-            border: '1px solid var(--paper-line)',
+            background: '#f6f1e4',
+            border: '1px solid #ddd4bd',
             borderRadius: 3,
-            fontFamily: 'var(--font-mono)',
+            fontFamily: '"IBM Plex Mono", "Courier New", monospace',
             fontSize: 12,
           }}
         />

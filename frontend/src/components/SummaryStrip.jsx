@@ -14,38 +14,16 @@ export default function SummaryStrip({ summary, loading }) {
   ];
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '1px',
-        background: 'var(--paper-line)',
-        border: '1px solid var(--paper-line)',
-        borderRadius: 'var(--radius)',
-        overflow: 'hidden',
-      }}
-    >
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-px overflow-hidden rounded-sm border border-paperLine bg-paperLine">
       {rows.map((row) => (
-        <div key={row.label} style={{ background: 'var(--paper)', padding: '1.25rem 1.5rem' }}>
-          <div
-            style={{
-              fontSize: '0.7rem',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'var(--text-muted)',
-              marginBottom: '0.4rem',
-            }}
-          >
+        <div key={row.label} className="bg-paper px-6 py-5">
+          <div className="mb-1 text-[0.7rem] uppercase tracking-wider text-textMuted">
             {row.label}
           </div>
           <div
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '1.5rem',
-              fontWeight: 600,
-              color: row.tone === 'brass' ? 'var(--brass)' : 'var(--rust)',
-              fontVariantNumeric: 'tabular-nums',
-            }}
+            className={`font-mono text-2xl font-semibold tabular-nums ${
+              row.tone === 'brass' ? 'text-brass' : 'text-rust'
+            }`}
           >
             {loading ? '···' : formatINR(row.value)}
           </div>

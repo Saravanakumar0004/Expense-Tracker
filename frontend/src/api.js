@@ -18,6 +18,7 @@ async function request(path, options = {}) {
 export const api = {
   getTransactions: (month) => request(`/transactions${month ? `?month=${month}` : ''}`),
   getSummary: (month) => request(`/transactions/summary?month=${month}`),
+  getMonthlySummary: () => request('/transactions/monthly-summary'),
   addTransaction: (data) =>
     request('/transactions', { method: 'POST', body: JSON.stringify(data) }),
   updateTransaction: (id, data) =>

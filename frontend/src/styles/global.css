@@ -44,6 +44,20 @@ select {
   font-family: inherit;
 }
 
+/* Force legible native form controls even when the OS/browser applies
+   forced dark mode to form fields (common on Android Chrome) */
+input[type='month'],
+input[type='date'] {
+  color-scheme: light;
+  color: var(--text-ink) !important;
+  background-color: #fff !important;
+}
+
+input[type='month']::-webkit-datetime-edit,
+input[type='date']::-webkit-datetime-edit {
+  color: var(--text-ink);
+}
+
 ::selection {
   background: var(--brass-soft);
 }
@@ -64,5 +78,98 @@ select:focus-visible {
   * {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- Layout classes (replace inline grid styles for responsiveness) ---------- */
+
+.app-shell {
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem;
+}
+
+.app-inner {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--paper-line);
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.txn-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 90px 110px 32px;
+  padding: 0.7rem 1rem;
+  align-items: center;
+}
+
+.txn-header {
+  grid-template-columns: 70px 1fr 90px 110px 32px;
+  padding: 0.6rem 1rem;
+}
+
+.entry-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+
+/* ---------- Mobile breakpoints ---------- */
+
+@media (max-width: 720px) {
+  .app-shell {
+    padding: 1.5rem 1rem;
+  }
+
+  .header-row h1 {
+    font-size: 1.6rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .entry-fields-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .txn-row,
+  .txn-header {
+    grid-template-columns: 56px 1fr 84px 28px;
+  }
+
+  .txn-row span:nth-child(3),
+  .txn-header span:nth-child(3) {
+    display: none;
+  }
+
+  .header-row {
+    align-items: flex-start;
   }
 }

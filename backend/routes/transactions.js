@@ -68,6 +68,47 @@ router.get('/summary', async (req, res) => {
   }
 });
 
+// GET /api/transactions/monthly-summary
+// Returns income, expense and savings totals for every month that has data,
+// sorted oldest to newest — used to compare months against each other.
+router.get('/monthly-summary', async (req, res) => {
+  try {
+    const results = await Transaction.aggregate([
+      {
+        $group: {
+          _id: {
+            month: { $dateToString: { format: '%Y-%m', date: '$date' } },
+            type: '$type',
+          },
+          total: { $sum: '$amount' },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.month',
+          totals: { $push: { type: '$_id.type', total: '$total' } },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    const monthly = results.map((row) => {
+      const income = row.totals.find((t) => t.type === 'income')?.total || 0;
+      const expense = row.totals.find((t) => t.type === 'expense')?.total || 0;
+      return {
+        month: row._id,
+        income,
+        expense,
+        savings: income - expense,
+      };
+    });
+
+    res.json(monthly);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to build monthly summary', details: err.message });
+  }
+});
+
 // POST /api/transactions
 router.post('/', async (req, res) => {
   try {
