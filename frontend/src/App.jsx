@@ -18,6 +18,7 @@ export default function App() {
   const [monthly, setMonthly] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [toast, setToast] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -50,6 +51,8 @@ export default function App() {
   async function handleDelete(id) {
     await api.deleteTransaction(id);
     await load();
+    setToast('Entry deleted');
+    setTimeout(() => setToast(''), 2500);
   }
 
   return (
@@ -70,6 +73,12 @@ export default function App() {
         {error && (
           <div className="mb-5 rounded-sm bg-rustSoft px-4 py-3 text-sm text-rust">
             {error} — check that <code>VITE_API_URL</code> points to your running backend.
+          </div>
+        )}
+
+        {toast && (
+          <div className="fixed bottom-6 right-6 z-50 rounded-sm border border-paperLine bg-paper px-4 py-2 text-sm text-ink900 shadow-lg">
+            {toast}
           </div>
         )}
 

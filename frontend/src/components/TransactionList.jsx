@@ -49,9 +49,15 @@ export default function TransactionList({ transactions, onDelete }) {
             {t.type === 'income' ? '+' : '−'}₹{t.amount.toLocaleString('en-IN')}
           </span>
           <button
-            onClick={() => onDelete(t._id)}
+            onClick={() => {
+              const label = t.note ? `${t.category} — ${t.note}` : t.category;
+              const amount = `₹${t.amount.toLocaleString('en-IN')}`;
+              if (window.confirm(`Delete this entry?\n\n${label} · ${amount}`)) {
+                onDelete(t._id);
+              }
+            }}
             aria-label={`Delete ${t.category} entry`}
-            className="justify-self-end text-base text-textMuted"
+            className="justify-self-end text-base text-textMuted transition-colors hover:text-rust"
           >
             ×
           </button>
